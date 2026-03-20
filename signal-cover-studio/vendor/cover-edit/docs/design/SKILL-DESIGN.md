@@ -2,7 +2,7 @@
 
 目标：设计一个配套的 OpenClaw skill，让主助手能直接调用 `cover-edit` 最终版能力，自动完成多平台封面、正文、平台文案和素材包输出。
 
-建议 skill 名：`platform-cover-studio`
+建议 skill 名：`signal-cover-studio`
 
 ---
 
@@ -70,7 +70,7 @@
 # 4. 目录建议
 
 ```text
-skills/platform-cover-studio/
+skills/signal-cover-studio/
   SKILL.md
   scripts/
     generate_spec.py

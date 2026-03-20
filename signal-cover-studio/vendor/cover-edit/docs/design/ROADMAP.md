@@ -203,7 +203,7 @@ cover-edit export-spec
 
 ### 任务
 
-1. 新建 `platform-cover-studio` skill
+1. 新建 `signal-cover-studio` skill
 2. 封装 spec 生成脚本
 3. 封装 bundle 渲染脚本
 4. 封装 validate 逻辑

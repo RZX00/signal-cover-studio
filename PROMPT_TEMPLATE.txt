@@ -1,1 +1,1 @@
-帮我安装 Platform Cover Studio：https://raw.githubusercontent.com/RZX00/platform-cover-studio/main/docs/install.md
+帮我安装 Signal Cover Studio：https://raw.githubusercontent.com/RZX00/signal-cover-studio/main/docs/install.md

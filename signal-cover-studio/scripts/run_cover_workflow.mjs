@@ -28,7 +28,7 @@ function absolutizeCliArgs(args) {
 const forwardedArgs = absolutizeCliArgs(rawArgs);
 
 if (!forwardedArgs.includes('--source') && !forwardedArgs.includes('--spec')) {
-  console.error(`platform-cover-studio
+  console.error(`signal-cover-studio
 
 Usage:
   node scripts/run_cover_workflow.mjs --source <file> [--out-dir <dir>] [--strict]

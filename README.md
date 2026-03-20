@@ -1,12 +1,14 @@
-# 🚀 Platform Cover Studio
+# 🚀 Signal Cover Studio
+
+![Signal Cover Studio Banner](docs/assets/banner.png)
 
 ## 一句话安装
 
 ```text
-帮我安装 Platform Cover Studio：https://raw.githubusercontent.com/RZX00/platform-cover-studio/main/docs/install.md
+帮我安装 Signal Cover Studio：https://raw.githubusercontent.com/RZX00/signal-cover-studio/main/docs/install.md
 ```
 
-仓库地址：`RZX00/platform-cover-studio`  
+仓库地址：`RZX00/signal-cover-studio`  
 分支：`main`
 
 ## 这是啥
@@ -22,7 +24,7 @@
 
 这个发布仓库里已经把下面这些东西一起带上了：
 
-- `platform-cover-studio/` skill 本体
+- `signal-cover-studio/` skill 本体
 - `vendor/cover-edit/` 运行时
 - `node_modules/` 依赖
 - `.skill` 打包文件
@@ -58,17 +60,17 @@
 
 ## 仓库内容
 
-- `platform-cover-studio/` — 可安装 skill 目录
-- `platform-cover-studio.skill` — 打包后的技能文件
+- `signal-cover-studio/` — 可安装 skill 目录
+- `signal-cover-studio.skill` — 打包后的技能文件
 - `docs/install.md` — 安装说明
 - `PROMPT_TEMPLATE.txt` — 一句话安装提示词
 
 ## 手动安装
 
-把 `platform-cover-studio/` 放到以下任一位置：
+把 `signal-cover-studio/` 放到以下任一位置：
 
-- `<workspace>/skills/platform-cover-studio`
-- `~/.openclaw/skills/platform-cover-studio`
+- `<workspace>/skills/signal-cover-studio`
+- `~/.openclaw/skills/signal-cover-studio`
 
 然后开启新的 OpenClaw session。
 
@@ -86,7 +88,7 @@ node scripts/run_cover_workflow.mjs \
 如果是第一次在一台全新机器上使用，Playwright 浏览器二进制可能仍需手动安装：
 
 ```bash
-cd platform-cover-studio/vendor/cover-edit
+cd signal-cover-studio/vendor/cover-edit
 npx playwright install chromium
 ```
 

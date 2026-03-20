@@ -59,13 +59,13 @@ npm run example:workflow
 
 A repo-local skill wrapper now lives at:
 
-- `skills/platform-cover-studio/SKILL.md`
-- `skills/platform-cover-studio/scripts/run_cover_workflow.mjs`
+- `skills/signal-cover-studio/SKILL.md`
+- `skills/signal-cover-studio/scripts/run_cover_workflow.mjs`
 
 Run it directly:
 
 ```bash
-node skills/platform-cover-studio/scripts/run_cover_workflow.mjs \
+node skills/signal-cover-studio/scripts/run_cover_workflow.mjs \
   --source examples/content/fundraising.md \
   --out-dir dist/skill-demo \
   --strict

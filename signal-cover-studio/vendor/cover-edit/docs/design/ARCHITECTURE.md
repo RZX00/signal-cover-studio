@@ -41,7 +41,7 @@ packages/
   cli/               # cover-edit 命令行
   qa/                # 溢出检测、视觉回归、字体检查
 skills/
-  platform-cover-studio/
+  signal-cover-studio/
 ```
 
 ---

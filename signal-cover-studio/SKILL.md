@@ -1,9 +1,9 @@
 ---
-name: platform-cover-studio
+name: signal-cover-studio
 description: Self-contained multi-platform editorial cover workflow. Use when the user wants to turn one Markdown/text/article source into a Xiaohongshu cover, WeChat cover, X image, and optionally WeChat article HTML with a validated, reusable editorial system.
 ---
 
-# platform-cover-studio
+# signal-cover-studio
 
 Use this skill when the user wants a **cross-platform editorial cover bundle** from one content source.
 
