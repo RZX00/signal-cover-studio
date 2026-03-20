@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "projectId": "fundraising-2026-03-19",
+  "locale": "en-US",
+  "source": {
+    "title": "Finding Investors Is Also a Job",
+    "subtitle": "Define the right person. Build the profile. Then go search.",
+    "summary": "Fundraising works better when it becomes deliberate matching instead of random outreach.",
+    "body": [
+      { "type": "lead", "text": "Finding investors is not a lottery. Start by defining who you actually need in the room." },
+      { "type": "paragraph", "text": "The first move is not sending more cold messages. It is writing a clear profile: do you need sector access, conviction, decision speed, or long-term support?" },
+      { "type": "quote", "text": "Fundraising is not begging. It is matching." },
+      { "type": "list", "items": ["Define the role your ideal investor should play", "Write down filters, signals, and red lines", "Search channels and names against that profile"] }
+    ],
+    "keywords": ["Fundraising", "Investor Fit", "Matching"],
+    "language": "en"
+  },
+  "assets": {
+    "images": [
+      { "id": "hero-orb", "path": "../assets/hero-orb.svg", "role": "hero", "alt": "Abstract orb artwork" }
+    ]
+  },
+  "style": {
+    "theme": "soft-gradient-editorial",
+    "fontProfile": "gradient-cover-cn-en",
+    "allowIllustration": false,
+    "allowSpeechBubble": false
+  },
+  "targets": [
+    { "id": "wechat-cover", "platform": "wechat-cover", "template": "editorial-minimal" },
+    { "id": "wechat-article", "platform": "wechat-article", "template": "wechat-article-clean", "output": { "format": "html" } },
+    { "id": "xhs-cover", "platform": "xhs-cover", "template": "editorial-cover" },
+    { "id": "x-post", "platform": "x-post", "template": "editorial-cover" }
+  ]
+}

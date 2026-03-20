@@ -1,0 +1,27 @@
+{
+  "name": "cover-edit",
+  "version": "1.0.0",
+  "description": "Spec-first multi-platform content packaging studio for covers and articles.",
+  "type": "module",
+  "bin": {
+    "cover-edit": "./bin/cover-edit.mjs"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node --test tests/**/*.test.mjs",
+    "dev": "node scripts/dev-server.mjs",
+    "render": "node bin/cover-edit.mjs render",
+    "bundle": "node bin/cover-edit.mjs bundle",
+    "validate": "node bin/cover-edit.mjs validate",
+    "scaffold": "node bin/cover-edit.mjs scaffold",
+    "workflow": "node bin/cover-edit.mjs workflow",
+    "example:workflow": "node bin/cover-edit.mjs workflow --source examples/content/fundraising.md --out-dir dist/acceptance/fundraising --strict",
+    "smoke:render": "node bin/cover-edit.mjs render --spec examples/specs/fundraising.json --target x-post --out dist/smoke/x-post.png",
+    "smoke:bundle": "node bin/cover-edit.mjs bundle --spec examples/specs/fundraising.json --out-dir dist/smoke-bundle",
+    "ci": "npm run check && npm test && node bin/cover-edit.mjs validate --spec examples/specs/fundraising.json --all && node bin/cover-edit.mjs bundle --spec examples/specs/fundraising.json --out-dir dist/ci"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "playwright": "^1.53.2"
+  }
+}
