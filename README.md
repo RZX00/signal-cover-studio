@@ -8,14 +8,21 @@
 
 ## 🔍 实际效果
 
-〔待补：证据物。建议内容：用一篇真实文章跑出的三张封面对比图，附输入的 Markdown 和输出文件清单。输入已放在 [`docs/demo/compounding-through-the-waves.md`](./docs/demo/compounding-through-the-waves.md)（作者公开发表于 rzx000.com 的《穿越时代洪流，积累复利》）；生成方法见下面「第一次使用」。〕
+![公众号封面（900 × 383）、小红书封面（1200 × 1600）和 X 配图（1600 × 1200）并排：同一篇文章、同一套版式，左上是标题和副标题，右下是摘要](./docs/assets/covers-compare.jpg)
+
+上图是用一篇真实文章跑出来的：《穿越时代洪流，积累复利》，作者本人公开发表于 [rzx000.com](https://rzx000.com/writing/compounding-through-the-waves)。输入是 [`docs/demo/compounding-through-the-waves.md`](./docs/demo/compounding-through-the-waves.md)（正文转成 Markdown，去掉了原文的 10 张插图）。第一次用 `--strict` 运行，校验发现自动截取的摘要在公众号和小红书封面上放不下，直接停下、没有出图；按 [`references/troubleshooting.md`](./signal-cover-studio/references/troubleshooting.md) 把 spec 里的摘要改短为「创业两年半，热词换了八轮」后重跑，7 秒得到：
+
+- 三张封面原图：[`wechat-cover.png`](./docs/assets/wechat-cover.png)、[`xhs-cover.png`](./docs/assets/xhs-cover.png)、[`x-post.png`](./docs/assets/x-post.png)。
+- 公众号文章 HTML：[`wechat-article.html`](./docs/demo/wechat-article.html)。
+- 校验结果：3 张封面全部通过校验，wechat-cover 有警告 hit-min-font-size。
+- 看得出的不足：小红书封面的标题在「洪流」中间断行；三张图左上角的小字是平台名（如「微信公众号封面」），没有换成文章自己的内容。
 
 ## 📌 状态与限制
 
 - **状态**：渲染程序 `cover-edit` 版本 1.0.0（见 `signal-cover-studio/vendor/cover-edit/package.json`），个人项目；2026-03-20 首次提交，没有 release 和 tag。〔待补：是否持续维护、是否接收 issue 和 PR〕
 - **能用在哪**：任何加载 Agent Skills 的 Agent。宿主加载〔待核：在 Claude Code 和 Codex 里各装一次，确认被加载并跑完一次〕。2026-10 起改为通用技能，此前只面向 OpenClaw。
 - **不适合**：画插图、照片海报和不带文字的图（请用图像模型）；自由排版。版式固定为「左上标题、右下摘要」，平台只有下面 4 种。
-- **依赖**：Node.js、npm，以及 Playwright 的 Chromium 浏览器（几百 MB）。仓库不带 `node_modules`，第一次使用前要自己装，步骤见下一节。字体取自系统字体栈（Noto、思源、苹方、微软雅黑等），不加载远程字体；Linux 上需要装 `fonts-noto-cjk`（仓库的字体说明里这样要求），否则缺中文字形。
+- **依赖**：Node.js、npm，以及 Playwright 的 Chromium 浏览器（几百 MB）。仓库不带 `node_modules`，第一次使用前要自己装，步骤见下一节。脚本层已在 Windows 11、Node 24.15.0、Playwright 1.58.2 上跑通。字体取自系统字体栈（Noto、思源、苹方、微软雅黑等），不加载远程字体；Linux 上需要装 `fonts-noto-cjk`（仓库的字体说明里这样要求），否则缺中文字形。
 - **数据去向**：渲染全部在本机完成，代码里没有联网请求，也不需要任何凭据。文件只写进你指定的输出目录（默认 `dist/skill-runs/latest`）。Agent 读文章时，正文会进入你所用模型的上下文。
 
 ## 📦 安装
@@ -71,7 +78,7 @@
 | `x-post.png` | 1600 × 1200 | X 配图 |
 | `wechat-article.html` | 不适用 | 公众号文章 HTML，样式内联 |
 
-尺寸取自 [`platforms.js`](./signal-cover-studio/vendor/cover-edit/src/lib/platforms.js)，截图缩放比固定为 1，输出就是上表像素，没有 2K 或 2x 选项。〔待核：跑完后核对生成文件的实际像素〕
+尺寸取自 [`platforms.js`](./signal-cover-studio/vendor/cover-edit/src/lib/platforms.js)，截图缩放比固定为 1，输出就是上表像素，没有 2K 或 2x 选项。已用实际生成的文件核对，像素与上表一致。
 
 <details>
 <summary>不经过 Agent，直接跑命令</summary>
