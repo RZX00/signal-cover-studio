@@ -1,6 +1,6 @@
 ---
 name: signal-cover-studio
-description: Self-contained multi-platform editorial cover workflow. Use when the user wants to turn one Markdown/text/article source into a Xiaohongshu cover, WeChat cover, X image, and optionally WeChat article HTML with a validated, reusable editorial system.
+description: Self-contained multi-platform editorial cover workflow. Use when the user wants to turn one Markdown/text/article source into a Xiaohongshu cover, WeChat cover, X image, and optionally WeChat article HTML with a validated, reusable editorial system. 触发词：公众号封面、小红书封面、X 配图、微信公众号文章 HTML、一篇文章出三平台封面。
 ---
 
 # signal-cover-studio
@@ -12,7 +12,7 @@ This packaged release includes:
 - the skill wrapper
 - the editorial layout rules
 - a vendored `cover-edit` runtime under `vendor/cover-edit/`
-- the local Node dependencies needed by that runtime
+- the runtime's `package.json` and lockfile (dependencies are NOT bundled; see Runtime note)
 
 ## What it does
 
@@ -104,16 +104,17 @@ Return those paths to the user or send the assets directly, depending on the cha
 
 ## Runtime note
 
-This release bundles the local Node runtime files for `cover-edit`, including `node_modules`.
-
-However, Playwright browser binaries may still be required on a fresh machine. If rendering fails with a browser-launch error, tell the user they may need:
+This release does **not** bundle `node_modules` or browser binaries. Before the first run, `vendor/cover-edit/` needs two installs:
 
 ```bash
 cd <skill>/vendor/cover-edit
+npm install
 npx playwright install chromium
 ```
 
-Do **not** auto-run extra installs unless the user explicitly asks.
+Both download files (npm packages, then a Chromium build of several hundred MB). Ask the user before running them; do **not** auto-run unless the user agrees. If the first run fails with `Cannot find package 'playwright'` or a browser-launch error, the missing install is the usual cause.
+
+Output pixel sizes are fixed by the platform packs (screenshot scale is 1): `wechat-cover` 900x383, `xhs-cover` 1200x1600, `x-post` 1600x1200. There is no 2K / 2x option.
 
 ## Notes
 
