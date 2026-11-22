@@ -21,11 +21,20 @@ async function pngSize(file) {
 test('the example article becomes three covers and one HTML file', async () => {
   // COVER_E2E_OUT lets CI keep the images as an artifact.
   const outDir = process.env.COVER_E2E_OUT || (await mkdtemp(path.join(os.tmpdir(), 'cover-e2e-')));
-  await promisify(execFile)(
-    process.execPath,
-    [entry, '--source', path.join(root, 'examples/content/fundraising.md'), '--out-dir', outDir, '--strict'],
-    { cwd: os.tmpdir() }
-  );
+  try {
+    await promisify(execFile)(
+      process.execPath,
+      [entry, '--source', path.join(root, 'examples/content/fundraising.md'), '--out-dir', outDir, '--strict'],
+      { cwd: os.tmpdir() }
+    );
+  } catch (error) {
+    // validation.json is written before a strict run stops; show which layer failed and why.
+    const report = await readFile(path.join(outDir, 'validation.json'), 'utf8').catch(() => '');
+    const issues = report
+      ? JSON.parse(report).validations.flatMap((item) => item.issues.map((issue) => ({ target: item.targetId, ...issue })))
+      : [];
+    assert.fail(`${error.stderr?.split('\n')[0] || error.message}\n${JSON.stringify(issues, null, 2)}`);
+  }
 
   assert.deepEqual(await pngSize(path.join(outDir, 'wechat-cover.png')), [900, 383]);
   assert.deepEqual(await pngSize(path.join(outDir, 'xhs-cover.png')), [1200, 1600]);
