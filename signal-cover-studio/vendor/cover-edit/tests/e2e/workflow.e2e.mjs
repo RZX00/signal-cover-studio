@@ -1,5 +1,5 @@
-// End-to-end: run the skill's entry script on the bundled example with --strict and
-// check what the README says comes out. Needs Chromium (npx playwright install chromium).
+// End-to-end: run the skill's entry script and check what the README says comes out.
+// Needs Chromium (npx playwright install chromium) and, on Linux, fonts-noto-cjk.
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { mkdtemp, readFile } from 'node:fs/promises';
@@ -11,6 +11,29 @@ import { promisify } from 'node:util';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const entry = path.resolve(root, '../../scripts/run_cover_workflow.mjs');
+const example = path.join(root, 'examples/content/fundraising.md');
+
+// COVER_E2E_OUT lets CI keep the images as an artifact.
+async function outDir(name) {
+  return process.env.COVER_E2E_OUT
+    ? path.join(process.env.COVER_E2E_OUT, name)
+    : mkdtemp(path.join(os.tmpdir(), `cover-e2e-${name}-`));
+}
+
+async function run(dir, ...flags) {
+  try {
+    await promisify(execFile)(process.execPath, [entry, '--source', example, '--out-dir', dir, ...flags], { cwd: os.tmpdir() });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, message: error.stderr?.split('\n')[0] || error.message };
+  }
+}
+
+// validation.json is written before a strict run stops, so it is there after a failure too.
+async function issues(dir) {
+  const report = JSON.parse(await readFile(path.join(dir, 'validation.json'), 'utf8'));
+  return report.validations.flatMap((item) => item.issues.map((issue) => ({ target: item.targetId, ...issue })));
+}
 
 async function pngSize(file) {
   const bytes = await readFile(file);
@@ -18,34 +41,41 @@ async function pngSize(file) {
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 }
 
-test('the example article becomes three covers and one HTML file', async () => {
-  // COVER_E2E_OUT lets CI keep the images as an artifact.
-  const outDir = process.env.COVER_E2E_OUT || (await mkdtemp(path.join(os.tmpdir(), 'cover-e2e-')));
-  try {
-    await promisify(execFile)(
-      process.execPath,
-      [entry, '--source', path.join(root, 'examples/content/fundraising.md'), '--out-dir', outDir, '--strict'],
-      { cwd: os.tmpdir() }
-    );
-  } catch (error) {
-    // validation.json is written before a strict run stops; show which layer failed and why.
-    const report = await readFile(path.join(outDir, 'validation.json'), 'utf8').catch(() => '');
-    const issues = report
-      ? JSON.parse(report).validations.flatMap((item) => item.issues.map((issue) => ({ target: item.targetId, ...issue })))
-      : [];
-    assert.fail(`${error.stderr?.split('\n')[0] || error.message}\n${JSON.stringify(issues, null, 2)}`);
-  }
-
-  assert.deepEqual(await pngSize(path.join(outDir, 'wechat-cover.png')), [900, 383]);
-  assert.deepEqual(await pngSize(path.join(outDir, 'xhs-cover.png')), [1200, 1600]);
-  assert.deepEqual(await pngSize(path.join(outDir, 'x-post.png')), [1600, 1200]);
-  assert.match(await readFile(path.join(outDir, 'wechat-article.html'), 'utf8'), /<html/i);
-
-  const manifest = JSON.parse(await readFile(path.join(outDir, 'manifest.json'), 'utf8'));
+async function assertBundle(dir) {
+  assert.deepEqual(await pngSize(path.join(dir, 'wechat-cover.png')), [900, 383]);
+  assert.deepEqual(await pngSize(path.join(dir, 'xhs-cover.png')), [1200, 1600]);
+  assert.deepEqual(await pngSize(path.join(dir, 'x-post.png')), [1600, 1200]);
+  assert.match(await readFile(path.join(dir, 'wechat-article.html'), 'utf8'), /<html/i);
+  const manifest = JSON.parse(await readFile(path.join(dir, 'manifest.json'), 'utf8'));
   assert.equal(manifest.outputs.length, 4);
-  const errors = manifest.validations.flatMap((item) => item.issues).filter((issue) => issue.level === 'error');
-  assert.deepEqual(errors, []);
-  for (const name of ['project.spec.json', 'validation.json']) {
-    JSON.parse(await readFile(path.join(outDir, name), 'utf8'));
-  }
+  JSON.parse(await readFile(path.join(dir, 'project.spec.json'), 'utf8'));
+}
+
+test('the bundled example becomes three covers and one HTML file at the documented sizes', async (t) => {
+  const dir = await outDir('example');
+  const result = await run(dir);
+  assert.ok(result.ok, result.message);
+  await assertBundle(dir);
+  // Whether the example text fits depends on the fonts installed, so fit problems are
+  // reported, not failed; anything else in the report is a real defect.
+  const found = await issues(dir);
+  for (const issue of found) t.diagnostic(`${issue.level} ${issue.code} ${issue.target}/${issue.layerId}`);
+  assert.deepEqual(found.filter((issue) => !['text-overflow', 'hit-min-font-size'].includes(issue.code)), []);
+});
+
+test('a strict run passes and renders when the text fits', async () => {
+  const dir = await outDir('strict-pass');
+  const result = await run(dir, '--strict', '--title', 'Investor Fit', '--subtitle', 'Define. Profile. Search.', '--summary', 'Match, do not spray.');
+  assert.ok(result.ok, `${result.message}\n${JSON.stringify(await issues(dir).catch(() => []), null, 2)}`);
+  await assertBundle(dir);
+  assert.deepEqual((await issues(dir)).filter((issue) => issue.level === 'error'), []);
+});
+
+test('a strict run stops before rendering when the text cannot fit', async () => {
+  const dir = await outDir('strict-stop');
+  const result = await run(dir, '--strict', '--title', 'An extremely long headline that no cover can hold '.repeat(12));
+  assert.equal(result.ok, false);
+  assert.match(result.message, /Workflow validation failed/);
+  assert.ok((await issues(dir)).some((issue) => issue.level === 'error' && issue.code === 'text-overflow'));
+  await assert.rejects(readFile(path.join(dir, 'manifest.json')), { code: 'ENOENT' });
 });

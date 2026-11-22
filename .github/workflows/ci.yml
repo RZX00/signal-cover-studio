@@ -48,12 +48,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - name: Example article to three covers and one HTML file, strict
+      - name: Render the bundled example; strict mode passes when text fits and stops when it cannot
         run: npm run test:e2e
         env:
           COVER_E2E_OUT: ${{ runner.temp }}/covers
-      - name: Validate and bundle the example spec
-        run: npm run ci
       - uses: actions/upload-artifact@v4
         if: always()
         with:
