@@ -164,7 +164,7 @@ flowchart LR
 
 ## 🧯 已知问题
 
-- 自带的英文示例稿 `fundraising.md` 加 `--strict`，在 CI 的 Ubuntu 24.04（装了 `fonts-noto-cjk`）上通不过校验：公众号封面的标题、小红书封面的摘要报 `text-overflow`。不加 `--strict` 能出齐 4 个文件。文字能不能放下取决于本机装了哪些字体，换了系统要重新看 `validation.json`。
+- 自带的英文示例稿 `fundraising.md` 加 `--strict`，在 CI 的 Ubuntu 24.04（装了 `fonts-noto-cjk`）上出不了图：公众号封面的标题、小红书封面的摘要报 `text-overflow`。加 `--strict` 时停在校验；不加时停在渲染，报 `Layout validation failed — title: text-overflow`。用 `--title`、`--summary` 换成短一些的文字后，同一篇稿子能出齐 4 个文件（CI 里跑的就是这个）。文字能不能放下取决于本机装了哪些字体，换了系统要重新看 `validation.json`。
 - `vendor/cover-edit/README.md` 和 `vendor/cover-edit/docs/design/` 下的设计笔记仍写着 OpenClaw，其中 `skills/signal-cover-studio/` 路径已不存在。
 
 ## 📁 仓库内容
