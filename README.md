@@ -2,11 +2,11 @@
 
 给 Agent 一篇 Markdown 文章，它一次做出公众号封面、小红书封面、X 配图和公众号 HTML。
 
-[![CI](https://github.com/RZX00/signal-cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/RZX00/signal-cover-studio/actions/workflows/ci.yml)
-
 <p align="center">
   <img src="./docs/assets/banner.jpg" alt="Signal Cover Studio 头图：印刷台上，左边是一页文章稿，右边是按横、竖、横三种比例裁好的三张封面，旁边放着一支洋红色的笔" width="100%" />
 </p>
+
+[![CI](https://github.com/RZX00/signal-cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/RZX00/signal-cover-studio/actions/workflows/ci.yml)
 
 ## 🔍 实际效果
 
