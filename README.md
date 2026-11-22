@@ -24,7 +24,7 @@
 - **状态**：渲染程序 `cover-edit` 版本 1.0.0（见 `signal-cover-studio/vendor/cover-edit/package.json`），个人项目；2026-03-20 首次提交，没有 release 和 tag。〔待补：是否持续维护、是否接收 issue 和 PR〕
 - **能用在哪**：任何加载 Agent Skills 的 Agent。宿主加载〔待核：在 Claude Code 和 Codex 里各装一次，确认被加载并跑完一次〕。2026-10 起改为通用技能，此前只面向 OpenClaw。
 - **不适合**：画插图、照片海报和不带文字的图（请用图像模型）；自由排版。版式固定为「左上标题、右下摘要」，平台只有下面 4 种。
-- **依赖**：Node.js、npm，以及 Playwright 的 Chromium 浏览器（几百 MB）。仓库不带 `node_modules`，第一次使用前要自己装，步骤见下一节。脚本层已在 Windows 11、Node 24.15.0、Playwright 1.58.2 上跑通；每次提交由 CI 在 Ubuntu 上用自带示例稿实际渲染一遍并核对三张图的像素，单元测试另在 Windows 上跑一遍。字体取自系统字体栈（Noto、思源、苹方、微软雅黑等），不加载远程字体；Linux 上需要装 `fonts-noto-cjk`（仓库的字体说明里这样要求），否则缺中文字形。
+- **依赖**：Node.js、npm，以及 Playwright 的 Chromium 浏览器（几百 MB）。仓库不带 `node_modules`，第一次使用前要自己装，步骤见下一节。脚本层已在 Windows 11、Node 24.15.0、Playwright 1.58.2 上跑通；每次提交由 CI 在 Ubuntu 24.04 上用自带示例稿（标题和摘要换成短一些的文字，原因见「已知问题」）实际渲染一遍并核对三张图的像素，单元测试另在 Windows 上跑一遍。字体取自系统字体栈（Noto、思源、苹方、微软雅黑等），不加载远程字体；Linux 上需要装 `fonts-noto-cjk`（仓库的字体说明里这样要求），否则缺中文字形。
 - **数据去向**：渲染全部在本机完成，代码里没有联网请求，也不需要任何凭据。文件只写进你指定的输出目录（默认 `dist/skill-runs/latest`）。Agent 读文章时，正文会进入你所用模型的上下文。
 
 ## 📦 安装
