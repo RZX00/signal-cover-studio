@@ -4,7 +4,7 @@ Use this file when the user asks for a cross-platform cover bundle, editorial te
 
 ## Generator Choice
 
-Use `../../projects/cover-edit` for this mode.
+Use the bundled runtime at `vendor/cover-edit/` (relative to this skill's folder) for this mode.
 
 Do **not** default to the old pure-black Bauhaus poster when the user is clearly asking for a cleaner editorial bundle across multiple platforms.
 
@@ -86,7 +86,7 @@ Minimal means minimal:
 
 ## Practical Workflow
 
-1. Use `../../projects/cover-edit`.
+1. Use `vendor/cover-edit/`.
 2. Keep the current accepted layout logic in `src/lib/render-model.js` as the source of truth.
 3. Validate before sending images.
 4. Render all requested targets together when possible.

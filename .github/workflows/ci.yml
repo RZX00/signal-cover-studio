@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: signal-cover-studio/vendor/cover-edit
+
+jobs:
+  unit:
+    name: unit (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      # Unit tests need no browser; skip the Chromium download.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: signal-cover-studio/vendor/cover-edit/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+
+  e2e:
+    # Pinned: the Playwright version in package-lock.json has no Chromium build for Ubuntu 26.04.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: signal-cover-studio/vendor/cover-edit/package-lock.json
+      - name: CJK fonts (the font notes require fonts-noto-cjk on Linux)
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Render the bundled example; strict mode passes when text fits and stops when it cannot
+        run: npm run test:e2e
+        env:
+          COVER_E2E_OUT: ${{ runner.temp }}/covers
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: covers
+          path: ${{ runner.temp }}/covers
+          if-no-files-found: ignore
+
+  package:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: signal-cover-studio.skill matches the skill folder
+        run: python3 tools/pack_skill.py --check

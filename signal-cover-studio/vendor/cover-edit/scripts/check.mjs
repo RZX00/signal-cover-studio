@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
 const ignore = new Set(['node_modules', '.git', 'dist']);
@@ -26,7 +27,8 @@ async function runCheck(file) {
   });
 }
 
-await walk(new URL('.', root).pathname);
+// fileURLToPath, not .pathname: on Windows .pathname is '/C:/...', which readdir cannot open.
+await walk(fileURLToPath(root));
 for (const file of targets) {
   await runCheck(file);
 }
